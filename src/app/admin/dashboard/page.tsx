@@ -1,7 +1,7 @@
-import MainLayout from '@/components/MainLayout';
+import DashboardPage from '@/components/Dashboard';
 
-const DashboardPage = () => {
-  return <MainLayout>Dashboard</MainLayout>;
+const page = () => {
+  return <DashboardPage />;
 };
 
-export default DashboardPage;
+export default page;
