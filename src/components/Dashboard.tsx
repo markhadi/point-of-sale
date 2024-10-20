@@ -84,6 +84,27 @@ const columns: ColumnDef<(typeof sortedTransactions)[0]>[] = [
   },
 ];
 
+const columnsMd: ColumnDef<(typeof sortedTransactions)[0]>[] = [
+  {
+    accessorKey: 'issued_at',
+    header: 'Date',
+    cell: ({ row }) => {
+      return new Date(row.getValue('issued_at')).toLocaleDateString('id-ID', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      });
+    },
+  },
+  {
+    accessorKey: 'total_amount',
+    header: 'Total',
+    cell: ({ row }) => {
+      return `$${row.getValue('total_amount')}`;
+    },
+  },
+];
+
 const DashboardPage = () => {
   const today = new Date();
 
@@ -137,10 +158,18 @@ const DashboardPage = () => {
 
       <div>
         <h2 className="font-bold text-[20px] mb-3 text-neutral-900">Transaction History</h2>
-        <DataTable
-          columns={columns}
-          data={sortedTransactions}
-        />
+        <div className="hidden md:block">
+          <DataTable
+            columns={columns}
+            data={sortedTransactions}
+          />
+        </div>
+        <div className="block md:hidden">
+          <DataTable
+            columns={columnsMd}
+            data={sortedTransactions}
+          />
+        </div>
       </div>
     </MainLayout>
   );

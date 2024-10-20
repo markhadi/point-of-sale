@@ -31,7 +31,7 @@ const Sidebar: React.FC<SidebarProps> = ({ navigation }) => {
               <li key={name}>
                 <Link
                   href={href}
-                  className={`px-4 py-2 flex gap-2 items-center font-bold rounded-md hover:bg-indigo-700 hover:text-white transition-all duration-300 ${isActive ? 'bg-indigo-200 text-indigo-600' : ''}`}
+                  className={`px-4 py-2 flex gap-2 items-center font-bold rounded-md w-full min-w-max hover:bg-indigo-700 hover:text-white transition-all duration-300 ${isActive ? 'bg-indigo-200 text-indigo-600' : ''}`}
                 >
                   <Icon />
                   <span>{name}</span>
