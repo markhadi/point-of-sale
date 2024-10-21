@@ -115,7 +115,7 @@ const DashboardPage = () => {
 
   return (
     <MainLayout>
-      <h1 className="text-[32px] font-bold mb-8">Dashboard</h1>
+      <h1>Dashboard</h1>
 
       <div className="flex flex-col md:flex-row gap-6 mb-8 md:justify-between">
         <StatisticCard

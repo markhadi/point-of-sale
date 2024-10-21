@@ -6,8 +6,8 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Calendar } from '@/components/ui/calendar';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar as CalendarIcon } from 'lucide-react'; // Icon for the button
-import { format } from 'date-fns'; // Formatting dates
+import { Calendar as CalendarIcon } from 'lucide-react';
+import { format } from 'date-fns';
 import { productTransactions } from '@/data/productTransactions';
 import MainLayout from '../MainLayout';
 
@@ -59,7 +59,7 @@ const ReportPage = () => {
   return (
     <MainLayout>
       <div className="space-y-6">
-        <h1 className="text-3xl font-bold">Reports</h1>
+        <h1>Reports</h1>
 
         <div className="flex gap-4 items-end">
           {/* Popover for Date Range Picker */}
@@ -69,7 +69,7 @@ const ReportPage = () => {
                 <Button
                   id="date"
                   variant={'outline'}
-                  className="w-[300px] justify-start text-left font-normal"
+                  className="w-min justify-start text-left font-normal"
                 >
                   <CalendarIcon className="mr-2" />
                   {date?.from ? (

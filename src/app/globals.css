@@ -80,4 +80,8 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+
+  h1 {
+    @apply text-[32px] font-bold mb-8;
+  }
 }

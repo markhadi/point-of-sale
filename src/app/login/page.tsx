@@ -37,7 +37,7 @@ export default function LoginPage() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setError(''); // Reset error sebelum proses login
+    setError('');
 
     const result = await signIn('credentials', {
       redirect: false,
