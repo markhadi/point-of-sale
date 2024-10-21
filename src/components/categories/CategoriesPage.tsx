@@ -5,29 +5,28 @@ import MainLayout from '../MainLayout';
 import { SearchBar } from '../SearchBar';
 import { PencilIcon, TrashIcon, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import ProductFormDialog from './ProductFormDialog';
-import { products } from '@/data/products';
+import CategoriesFormDialog from './CategoriesFormDialog';
 import { categories } from '@/data/category';
-import { Product } from '@/types/types';
+import { Category } from '@/types/types';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import DeleteConfirmationDialog from './DeleteConfirmationDialog';
 import { useSession } from 'next-auth/react';
 
-export default function ProductsPage() {
+export default function CategoriesPage() {
   const { data: session } = useSession();
-  const [productList, setProductList] = useState<Product[]>(products);
+  const [categoriesList, setCategoriesList] = useState<Category[]>(categories);
   const [searchTerm, setSearchTerm] = useState('');
   const [formOpen, setFormOpen] = useState(false);
   const [formMode, setFormMode] = useState<'add' | 'edit'>('add');
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [deleteDialog, setDeleteDialog] = useState({
     open: false,
-    productId: 0,
-    productName: '',
+    categoryId: 0,
+    categoryName: '',
   });
 
-  // Filter products based on search term
-  const filteredProducts = productList.filter(product => product.name.toLowerCase().includes(searchTerm.toLowerCase()) || product.code.toLowerCase().includes(searchTerm.toLowerCase()));
+  // Filter categories based on search term
+  const filteredCategories = categoriesList.filter(category => category.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
   // Get category name by id
   const getCategoryName = (categoryId: number) => {
@@ -35,32 +34,32 @@ export default function ProductsPage() {
   };
 
   // Handle form submission
-  const handleSubmit = (formData: Partial<Product>) => {
+  const handleSubmit = (formData: Partial<Category>) => {
     const currentUser = session?.user?.name || 'Unknown User';
     const timestamp = new Date();
 
     if (formMode === 'add') {
-      const newProduct: Product = {
+      const newCategory: Category = {
         ...formData,
-        id: Math.max(...productList.map(p => p.id)) + 1,
+        id: Math.max(...categoriesList.map(p => p.id)) + 1,
         created_at: timestamp,
         updated_at: timestamp,
         created_by: currentUser,
         updated_by: currentUser,
-      } as Product;
+      } as Category;
 
-      setProductList(prev => [...prev, newProduct]);
-    } else if (selectedProduct) {
-      setProductList(prev =>
-        prev.map(product =>
-          product.id === selectedProduct.id
+      setCategoriesList(prev => [...prev, newCategory]);
+    } else if (selectedCategory) {
+      setCategoriesList(prev =>
+        prev.map(category =>
+          category.id === selectedCategory.id
             ? {
-                ...product,
+                ...category,
                 ...formData,
                 updated_at: timestamp,
                 updated_by: currentUser,
               }
-            : product
+            : category
         )
       );
     }
@@ -69,30 +68,30 @@ export default function ProductsPage() {
   };
 
   // Handle edit button click
-  const handleEdit = (product: Product) => {
-    setSelectedProduct(product);
+  const handleEdit = (category: Category) => {
+    setSelectedCategory(category);
     setFormMode('edit');
     setFormOpen(true);
   };
 
   // Handle delete button click
-  const handleDelete = (product: Product) => {
+  const handleDelete = (category: Category) => {
     setDeleteDialog({
       open: true,
-      productId: product.id,
-      productName: product.name,
+      categoryId: category.id,
+      categoryName: category.name,
     });
   };
 
   // function to handle confirmed deletion
   const handleConfirmDelete = () => {
-    setProductList(prev => prev.filter(product => product.id !== deleteDialog.productId));
-    setDeleteDialog({ open: false, productId: 0, productName: '' });
+    setCategoriesList(prev => prev.filter(category => category.id !== deleteDialog.categoryId));
+    setDeleteDialog({ open: false, categoryId: 0, categoryName: '' });
   };
 
   // Handle add new button click
   const handleAddNew = () => {
-    setSelectedProduct(null);
+    setSelectedCategory(null);
     setFormMode('add');
     setFormOpen(true);
   };
@@ -100,13 +99,13 @@ export default function ProductsPage() {
   return (
     <MainLayout>
       <div className="flex flex-col gap-8">
-        <h1 className="text-[32px] font-bold">Products</h1>
+        <h1 className="text-[32px] font-bold">Categories</h1>
 
         <div className="flex items-center justify-between gap-6">
           <SearchBar
             searchTerm={searchTerm}
             onSearch={setSearchTerm}
-            placeholder="Search data product"
+            placeholder="Search data category"
             className="w-full !mb-0"
           />
           <button
@@ -117,7 +116,7 @@ export default function ProductsPage() {
               size={24}
               strokeWidth={4}
             />
-            <span className="hidden md:block md:w-max">Add New Product</span>
+            <span className="hidden md:block md:w-max">Add New Category</span>
           </button>
         </div>
 
@@ -126,36 +125,28 @@ export default function ProductsPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>No</TableHead>
-                <TableHead>Code</TableHead>
-                <TableHead className="w-full">Name</TableHead>
-                <TableHead>Stock</TableHead>
-                <TableHead>Price</TableHead>
-                <TableHead>Category</TableHead>
+                <TableHead className="w-full">Category</TableHead>
                 <TableHead className="max-w-20">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredProducts.map((product, index) => (
-                <TableRow key={product.id}>
+              {filteredCategories.map((category, index) => (
+                <TableRow key={category.id}>
                   <TableCell>{index + 1}</TableCell>
-                  <TableCell>{product.code}</TableCell>
-                  <TableCell>{product.name}</TableCell>
-                  <TableCell>{product.stock}</TableCell>
-                  <TableCell>${product.price}</TableCell>
-                  <TableCell>{getCategoryName(product.category_id)}</TableCell>
-                  <TableCell>
+                  <TableCell>{category.name}</TableCell>
+                  <TableCell className="max-w-20">
                     <div className="flex items-center gap-2">
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => handleEdit(product)}
+                        onClick={() => handleEdit(category)}
                       >
                         <PencilIcon className="h-4 w-4 text-yellow-500" />
                       </Button>
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => handleDelete(product)}
+                        onClick={() => handleDelete(category)}
                       >
                         <TrashIcon className="h-4 w-4 text-red-500" />
                       </Button>
@@ -167,11 +158,11 @@ export default function ProductsPage() {
           </Table>
         </div>
 
-        <ProductFormDialog
+        <CategoriesFormDialog
           open={formOpen}
           onOpenChange={setFormOpen}
           mode={formMode}
-          initialData={selectedProduct}
+          initialData={selectedCategory}
           onSubmit={handleSubmit}
           categories={categories}
         />
@@ -180,7 +171,7 @@ export default function ProductsPage() {
           open={deleteDialog.open}
           onOpenChange={open => setDeleteDialog(prev => ({ ...prev, open }))}
           onConfirm={handleConfirmDelete}
-          productName={deleteDialog.productName}
+          categoryName={deleteDialog.categoryName}
         />
       </div>
     </MainLayout>
