@@ -44,7 +44,7 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         role={role}
         navigation={navigation}
       />
-      <main className="w-full px-10 py-16 bg-neutral-50">{children}</main>
+      <main className="w-full px-10 py-16 bg-neutral-50 overflow-auto">{children}</main>
     </div>
   );
 };

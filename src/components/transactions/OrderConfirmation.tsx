@@ -1,5 +1,5 @@
-import { Button } from './ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from './ui/dialog';
+import { Button } from '../ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog';
 
 interface OrderConfirmationProps {
   isOpen: boolean;
@@ -42,7 +42,7 @@ export const OrderConfirmation = ({ isOpen, onClose, cartItems, customer, paymen
         </DialogHeader>
 
         <div className="space-y-4">
-          <div className="border-t pt-4 max-h-[25vh] overflow-y-scroll">
+          <div className="border-t pt-4 max-h-[25vh] overflow-y-auto">
             <h4 className="font-semibold mb-2">Order Details:</h4>
             {cartItems.map(item => (
               <div

@@ -1,15 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import MainLayout from './MainLayout';
+import MainLayout from '../MainLayout';
 import { products } from '@/data/products';
 import { paymentMethods } from '@/data/paymentMethods';
 import { categories } from '@/data/category';
-import { OrderConfirmation } from '@/components/OrderConfirmation';
+import { OrderConfirmation } from '@/components/transactions/OrderConfirmation';
 import { SearchBar } from '@/components/SearchBar';
-import { ProductCard } from '@/components/ProductCard';
-import { CartItemComponent } from '@/components/CartItemComponent';
-import { OrderForm } from '@/components/OrderForm';
+import { ProductCard } from '@/components/transactions/ProductCard';
+import { CartItemComponent } from '@/components/transactions/CartItemComponent';
+import { OrderForm } from '@/components/transactions/OrderForm';
 import { useCart } from '@/hooks/useCart';
 import { ShoppingCart } from 'lucide-react';
 
@@ -59,6 +59,7 @@ const TransactionsPage = () => {
           <SearchBar
             searchTerm={searchTerm}
             onSearch={setSearchTerm}
+            placeholder="Search Menu"
           />
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
