@@ -9,7 +9,7 @@ import CategoriesFormDialog from './CategoriesFormDialog';
 import { categories } from '@/data/category';
 import { Category } from '@/types/types';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import DeleteConfirmationDialog from './DeleteConfirmationDialog';
+import DeleteConfirmationDialog from '@/components/DeleteConfirmationDialog';
 import { useSession } from 'next-auth/react';
 
 export default function CategoriesPage() {
@@ -21,8 +21,7 @@ export default function CategoriesPage() {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [deleteDialog, setDeleteDialog] = useState({
     open: false,
-    categoryId: 0,
-    categoryName: '',
+    item: null as Category | null,
   });
 
   // Filter categories based on search term
@@ -78,15 +77,15 @@ export default function CategoriesPage() {
   const handleDelete = (category: Category) => {
     setDeleteDialog({
       open: true,
-      categoryId: category.id,
-      categoryName: category.name,
+      item: category,
     });
   };
 
-  // function to handle confirmed deletion
   const handleConfirmDelete = () => {
-    setCategoriesList(prev => prev.filter(category => category.id !== deleteDialog.categoryId));
-    setDeleteDialog({ open: false, categoryId: 0, categoryName: '' });
+    if (deleteDialog.item) {
+      setCategoriesList(prev => prev.filter(category => category.id !== deleteDialog.item?.id));
+    }
+    setDeleteDialog({ open: false, item: null });
   };
 
   // Handle add new button click
@@ -171,7 +170,8 @@ export default function CategoriesPage() {
           open={deleteDialog.open}
           onOpenChange={open => setDeleteDialog(prev => ({ ...prev, open }))}
           onConfirm={handleConfirmDelete}
-          categoryName={deleteDialog.categoryName}
+          itemName={deleteDialog.item?.name || ''}
+          itemType="category"
         />
       </div>
     </MainLayout>

@@ -11,7 +11,7 @@ import { PaymentMethod } from '@/types/types';
 import { paymentMethods } from '@/data/paymentMethods';
 import { Badge } from '@/components/ui/badge';
 import PaymentMethodFormDialog from './PaymentMethodFormDialog';
-import DeleteConfirmationDialog from './DeleteConfirmationDialog';
+import DeleteConfirmationDialog from '@/components/DeleteConfirmationDialog';
 
 export default function PaymentMethodsPage() {
   const { data: session } = useSession();
@@ -22,8 +22,7 @@ export default function PaymentMethodsPage() {
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethod | null>(null);
   const [deleteDialog, setDeleteDialog] = useState({
     open: false,
-    methodId: '',
-    methodName: '',
+    item: null as PaymentMethod | null,
   });
 
   // Filter payment methods based on search term
@@ -74,15 +73,16 @@ export default function PaymentMethodsPage() {
   const handleDelete = (method: PaymentMethod) => {
     setDeleteDialog({
       open: true,
-      methodId: method.id,
-      methodName: method.name,
+      item: method,
     });
   };
 
   // Function to handle confirmed deletion
   const handleConfirmDelete = () => {
-    setMethodsList(prev => prev.filter(method => method.id !== deleteDialog.methodId));
-    setDeleteDialog({ open: false, methodId: '', methodName: '' });
+    if (deleteDialog.item) {
+      setMethodsList(prev => prev.filter(method => method.id !== deleteDialog.item?.id));
+    }
+    setDeleteDialog({ open: false, item: null });
   };
 
   // Handle add new button click
@@ -174,7 +174,8 @@ export default function PaymentMethodsPage() {
           open={deleteDialog.open}
           onOpenChange={open => setDeleteDialog(prev => ({ ...prev, open }))}
           onConfirm={handleConfirmDelete}
-          methodName={deleteDialog.methodName}
+          itemName={deleteDialog.item?.name || ''}
+          itemType="payment method"
         />
       </div>
     </MainLayout>

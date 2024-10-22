@@ -11,7 +11,7 @@ import { User } from '@/types/types';
 import { users } from '@/data/users';
 
 import UserFormDialog from './UserFormDialog';
-import DeleteConfirmationDialog from './DeleteConfirmationDialog';
+import DeleteConfirmationDialog from '@/components/DeleteConfirmationDialog';
 
 export default function UsersPage() {
   const { data: session } = useSession();
@@ -22,8 +22,7 @@ export default function UsersPage() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [deleteDialog, setDeleteDialog] = useState({
     open: false,
-    userId: '',
-    username: '',
+    item: null as User | null,
   });
 
   // Filter users based on search term
@@ -64,18 +63,19 @@ export default function UsersPage() {
   };
 
   // Handle delete button click
-  const handleDelete = (user: User) => {
+  const handleDelete = (method: User) => {
     setDeleteDialog({
       open: true,
-      userId: user.id,
-      username: user.username,
+      item: method,
     });
   };
 
   // Function to handle confirmed deletion
   const handleConfirmDelete = () => {
-    setUserList(prev => prev.filter(user => user.id !== deleteDialog.userId));
-    setDeleteDialog({ open: false, userId: '', username: '' });
+    if (deleteDialog.item) {
+      setUserList(prev => prev.filter(method => method.id !== deleteDialog.item?.id));
+    }
+    setDeleteDialog({ open: false, item: null });
   };
 
   // Handle add new button click
@@ -163,7 +163,8 @@ export default function UsersPage() {
           open={deleteDialog.open}
           onOpenChange={open => setDeleteDialog(prev => ({ ...prev, open }))}
           onConfirm={handleConfirmDelete}
-          username={deleteDialog.username}
+          itemName={deleteDialog.item?.name || ''}
+          itemType="user"
         />
       </div>
     </MainLayout>
