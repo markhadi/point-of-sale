@@ -4,10 +4,25 @@ interface DeleteConfirmationDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
-  methodName: string;
+  itemName: string;
+  itemType?: 'category' | 'payment method' | 'product' | 'user';
 }
 
-export default function DeleteConfirmationDialog({ open, onOpenChange, onConfirm, methodName }: DeleteConfirmationDialogProps) {
+export default function DeleteConfirmationDialog({ open, onOpenChange, onConfirm, itemName, itemType }: DeleteConfirmationDialogProps) {
+  const getDescriptionText = () => {
+    const baseText = 'This action cannot be undone. This will permanently delete';
+
+    if (itemType === 'payment method') {
+      return `${baseText} payment method`;
+    }
+
+    if (itemType === 'user') {
+      return `${baseText} user`;
+    }
+
+    return baseText;
+  };
+
   return (
     <AlertDialog
       open={open}
@@ -17,7 +32,7 @@ export default function DeleteConfirmationDialog({ open, onOpenChange, onConfirm
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete payment method <span className="font-medium">{methodName}</span> from the database.
+            {getDescriptionText()} <span className="font-bold">{itemName}</span> from the database.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

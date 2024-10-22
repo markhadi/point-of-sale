@@ -10,7 +10,7 @@ import { products } from '@/data/products';
 import { categories } from '@/data/category';
 import { Product } from '@/types/types';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import DeleteConfirmationDialog from './DeleteConfirmationDialog';
+import DeleteConfirmationDialog from '@/components/DeleteConfirmationDialog';
 import { useSession } from 'next-auth/react';
 
 export default function ProductsPage() {
@@ -22,8 +22,7 @@ export default function ProductsPage() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [deleteDialog, setDeleteDialog] = useState({
     open: false,
-    productId: 0,
-    productName: '',
+    item: null as Product | null,
   });
 
   // Filter products based on search term
@@ -76,18 +75,19 @@ export default function ProductsPage() {
   };
 
   // Handle delete button click
-  const handleDelete = (product: Product) => {
+  const handleDelete = (method: Product) => {
     setDeleteDialog({
       open: true,
-      productId: product.id,
-      productName: product.name,
+      item: method,
     });
   };
 
   // function to handle confirmed deletion
   const handleConfirmDelete = () => {
-    setProductList(prev => prev.filter(product => product.id !== deleteDialog.productId));
-    setDeleteDialog({ open: false, productId: 0, productName: '' });
+    if (deleteDialog.item) {
+      setProductList(prev => prev.filter(method => method.id !== deleteDialog.item?.id));
+    }
+    setDeleteDialog({ open: false, item: null });
   };
 
   // Handle add new button click
@@ -180,7 +180,8 @@ export default function ProductsPage() {
           open={deleteDialog.open}
           onOpenChange={open => setDeleteDialog(prev => ({ ...prev, open }))}
           onConfirm={handleConfirmDelete}
-          productName={deleteDialog.productName}
+          itemName={deleteDialog.item?.name || ''}
+          itemType="product"
         />
       </div>
     </MainLayout>
