@@ -3,6 +3,7 @@
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Loading from '@/components/ui/loading';
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -22,5 +23,5 @@ export default function Home() {
     }
   }, [session, status, router]);
 
-  return <p>Loading...</p>;
+  return <Loading />;
 }

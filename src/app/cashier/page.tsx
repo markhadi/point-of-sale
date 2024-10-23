@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Loading from '@/components/ui/loading';
 
 export default function CashierPage() {
   const router = useRouter();
@@ -10,5 +11,5 @@ export default function CashierPage() {
     router.replace('/cashier/dashboard');
   }, [router]);
 
-  return <p>Loading Dashboard...</p>;
+  return <Loading />;
 }

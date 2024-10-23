@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import Sidebar from '@/components/Sidebar';
 import { LayoutGrid, DollarSign, Package, Tag, User, CreditCard, ChartArea } from 'lucide-react';
+import Loading from './ui/loading';
 
 const adminNavigation = [
   { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutGrid },
@@ -32,7 +33,7 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   }, [status, router]);
 
   if (status === 'loading') {
-    return <p>Loading...</p>;
+    return <Loading />;
   }
 
   const role = session?.user?.role;
