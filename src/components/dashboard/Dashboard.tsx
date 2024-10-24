@@ -4,9 +4,8 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tool
 import { Card, CardContent } from '@/components/ui/card';
 import MainLayout from '@/components/MainLayout';
 import { productTransactions } from '@/data/productTransactions';
-import { ColumnDef } from '@tanstack/react-table';
-import { DataTable } from '@/components/data-table';
 import { ProductTransaction } from '@/types/types';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 
 // Fungsi untuk menghitung total sales hari ini
 const calculateTotalSalesToday = (transactions: ProductTransaction[], today: Date) => {
@@ -54,56 +53,6 @@ const StatisticCard: React.FC<StatisticCardProps> = ({ label, value }) => (
 
 // Mendefinisikan kolom untuk DataTable
 const sortedTransactions = productTransactions.sort((a, b) => b.issued_at.getTime() - a.issued_at.getTime());
-
-const columns: ColumnDef<(typeof sortedTransactions)[0]>[] = [
-  {
-    accessorKey: 'issued_at',
-    header: 'Date',
-    cell: ({ row }) => {
-      return new Date(row.getValue('issued_at')).toLocaleDateString('id-ID', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-      });
-    },
-  },
-  {
-    accessorKey: 'customer_name',
-    header: 'Customer',
-  },
-  {
-    accessorKey: 'service_by',
-    header: 'Service By',
-  },
-  {
-    accessorKey: 'total_amount',
-    header: 'Total',
-    cell: ({ row }) => {
-      return `$${row.getValue('total_amount')}`;
-    },
-  },
-];
-
-const columnsMd: ColumnDef<(typeof sortedTransactions)[0]>[] = [
-  {
-    accessorKey: 'issued_at',
-    header: 'Date',
-    cell: ({ row }) => {
-      return new Date(row.getValue('issued_at')).toLocaleDateString('id-ID', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-      });
-    },
-  },
-  {
-    accessorKey: 'total_amount',
-    header: 'Total',
-    cell: ({ row }) => {
-      return `$${row.getValue('total_amount')}`;
-    },
-  },
-];
 
 const DashboardPage = () => {
   const today = new Date();
@@ -158,17 +107,34 @@ const DashboardPage = () => {
 
       <div>
         <h2 className="font-bold text-[20px] mb-3 text-neutral-900">Transaction History</h2>
-        <div className="hidden md:block">
-          <DataTable
-            columns={columns}
-            data={sortedTransactions}
-          />
-        </div>
-        <div className="block md:hidden">
-          <DataTable
-            columns={columnsMd}
-            data={sortedTransactions}
-          />
+
+        <div className="rounded-md border">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="min-w-32">Date</TableHead>
+                <TableHead className="w-full min-w-32">Customer</TableHead>
+                <TableHead className="w-full min-w-32">Service By</TableHead>
+                <TableHead className="w-full min-w-20">Total</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {sortedTransactions.map(transaction => (
+                <TableRow key={transaction.transaction_id}>
+                  <TableCell>
+                    {transaction.issued_at.toLocaleDateString('id-ID', {
+                      day: 'numeric',
+                      month: 'long',
+                      year: 'numeric',
+                    })}
+                  </TableCell>
+                  <TableCell>{transaction.customer_name}</TableCell>
+                  <TableCell>{transaction.service_by}</TableCell>
+                  <TableCell>${transaction.total_amount}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
       </div>
     </MainLayout>
